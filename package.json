@@ -32,7 +32,7 @@
   },
   "jest": {
     "testEnvironment": "jsdom",
-    "setupFiles": ["<rootDir>/jest.setup.js"]
+    "setupFilesAfterEnv": ["<rootDir>/jest.setup.js"]
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",
