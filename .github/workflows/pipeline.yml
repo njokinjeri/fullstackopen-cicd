@@ -51,7 +51,7 @@ jobs:
           content: "Deployment Successful! A new version deployed to production"
           title: "Deployment Details!"
           description: |
-            **Commit:** `${{ github.sha }}`
+            **Commit:** ${{ github.sha }}
             **Message:** ${{ github.event.head_commit.message }}
             **Author:** ${{ github.actor }}
           color: 0x22c55e
@@ -67,7 +67,7 @@ jobs:
           description: |
             **Repository:** ${{ github.repository }}
             **Branch:** ${{ github.ref_name }}
-            **Commit:** `${{ github.sha }}`
+            **Commit:** ${{ github.sha }}
             **Message:** ${{ github.event.head_commit.message }}"
             **Author:** ${{ github.actor }}
             **Workflow:** ${{ github.workflow }}
