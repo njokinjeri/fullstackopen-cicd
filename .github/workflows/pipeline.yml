@@ -42,6 +42,38 @@ jobs:
         run: |
           curl "$deploy_url"
 
+      - name: Notify Discord on Success
+        if: success() && github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip')
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: success
+          content: "Deployment Successful! A new version deployed to production"
+          title: "Deployment Details!"
+          description: |
+            **Commit:** `${{ github.sha }}`
+            **Message:** ${{ github.event.head_commit.message }}
+            **Author:** ${{ github.actor }}
+          color: 0x22c55e
+
+      - name: Notify Discord on Failure
+        if: failure()
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: failure
+          content: "Build Failed! The Pipeline encountered an error"
+          title: "Failure Details"
+          description: |
+            **Repository:** ${{ github.repository }}
+            **Branch:** ${{ github.ref_name }}
+            **Commit:** `${{ github.sha }}`
+            **Message:** ${{ github.event.head_commit.message }}"
+            **Author:** ${{ github.actor }}
+            **Workflow:** ${{ github.workflow }}
+            **Job:** ${{ github.job }}
+          color: 0xef4444
+
   tag_release:
     needs: [simple_deployment_pipeline]
     runs-on: ubuntu-latest
