@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
 
 jobs:
   simple_deployment_pipeline:
@@ -33,7 +36,7 @@ jobs:
         run: npm run build
 
       - name: Trigger deployment
-        if: github.ref == 'refs/heads/main'
+        if: ${{ github.event_name }} == 'push'
         env:
           deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK }}
         run: |
