@@ -1,0 +1,32 @@
+name: Periodic Health Check
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '*/15 * * * *'
+
+jobs: 
+  ping_health_check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check the deployed service URL
+        uses: jtalk/url-health-check-action@v5
+        with:
+          url: https://fullstackopen-cicd-685.onrender.com/health
+          follow-redirect: true
+          max-attempts: 3
+          retry-delay: 5s
+
+      - name: Notify Discord on Health Check Failure
+        if: ${{ failure() }}
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: failure
+          content: "Pokedex Health Check Failed! The application might be down."
+          title: "Health Check Failure Details"
+          description: |
+            **Time:** */15 * * * *
+            **URL:** https://fullstackopen-cicd-685a.onrender.com/health
+            **Please investigate immediately!**
+          color: 0xef4444
